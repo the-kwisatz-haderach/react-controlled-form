@@ -1,14 +1,21 @@
 {
   "compilerOptions": {
+    "target": "es5",
     "strict": true,
     "allowSyntheticDefaultImports": true,
     "jsx": "react",
-    "lib": ["dom", "es2020"],
+    "lib": ["dom", "es6"],
     "moduleResolution": "node",
+    "esModuleInterop": true,
     "strictNullChecks": true,
-    "noEmit": true,
     "skipLibCheck": true,
     "resolveJsonModule": true,
-    "baseUrl": "src"
-  }
+    "baseUrl": "src",
+    "rootDir": "src",
+    "outDir": "build",
+    "removeComments": true,
+    "downlevelIteration": true,
+    "isolatedModules": true
+  },
+  "exclude": ["**/stories/*"]
 }

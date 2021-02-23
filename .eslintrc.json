@@ -11,9 +11,12 @@
     "plugin:@typescript-eslint/recommended",
     "plugin:jest/recommended",
     "plugin:prettier/recommended",
-    "prettier"
+    "prettier",
+    "plugin:import/errors",
+    "plugin:import/warnings",
+    "plugin:import/typescript"
   ],
-  "plugins": ["@typescript-eslint", "prettier", "jest"],
+  "plugins": ["import", "@typescript-eslint", "prettier", "jest"],
   "parserOptions": {
     "ecmaVersion": 2018,
     "sourceType": "module",
@@ -22,13 +25,16 @@
     }
   },
   "rules": {
-    "explicit-module-boundary-types": [
-      "error",
-      {
-        "allowedNames": ["arg"]
-      }
-    ]
+    "@typescript-eslint/explicit-module-boundary-types": ["warn"]
+  },
+  "settings": {
+    "import/parsers": {
+      "@typescript-eslint/parser": [".ts", ".tsx"]
+    },
+    "import/resolver": {
+      "typescript": {}
+    }
   },
   "parser": "@typescript-eslint/parser",
-  "ignorePatterns": ["**/*.stories.*"]
+  "ignorePatterns": ["stories", "build"]
 }
