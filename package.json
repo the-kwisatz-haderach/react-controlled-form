@@ -1,0 +1,56 @@
+{
+  "name": "react-controlled-form",
+  "version": "1.0.0",
+  "description": "Custom hook for quickly creating controlled forms in React.",
+  "main": "index.js",
+  "scripts": {
+    "test": "jest --watchAll",
+    "lint": "npx eslint .",
+    "lint:fix": "npx eslint --fix .",
+    "format": "prettier -w '**/*.{ts,js}'",
+    "clean": "npm run lint:fix",
+    "storybook": "start-storybook -p 6006",
+    "build-storybook": "build-storybook"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/the-kwisatz-haderach/react-controlled-form.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/the-kwisatz-haderach/react-controlled-form/issues"
+  },
+  "homepage": "https://github.com/the-kwisatz-haderach/react-controlled-form#readme",
+  "devDependencies": {
+    "@babel/core": "^7.12.17",
+    "@storybook/addon-actions": "^6.1.18",
+    "@storybook/addon-essentials": "^6.1.18",
+    "@storybook/addon-links": "^6.1.18",
+    "@storybook/react": "^6.1.18",
+    "@testing-library/react": "^11.2.5",
+    "@types/jest": "^26.0.20",
+    "@typescript-eslint/eslint-plugin": "^4.15.2",
+    "@typescript-eslint/parser": "^4.15.2",
+    "babel-loader": "^8.2.2",
+    "eslint": "^7.20.0",
+    "eslint-config-prettier": "^8.0.0",
+    "eslint-config-standard": "^16.0.2",
+    "eslint-config-standard-with-typescript": "^20.0.0",
+    "eslint-plugin-import": "^2.22.1",
+    "eslint-plugin-jest": "^24.1.5",
+    "eslint-plugin-node": "^11.1.0",
+    "eslint-plugin-prettier": "^3.3.1",
+    "eslint-plugin-promise": "^4.3.1",
+    "eslint-plugin-standard": "^5.0.0",
+    "jest": "^26.6.3",
+    "prettier": "^2.2.1",
+    "react": "^17.0.1",
+    "react-dom": "^17.0.1",
+    "react-hooks-testing-library": "^0.6.0",
+    "ts-jest": "^26.5.1",
+    "typescript": "^4.1.5"
+  },
+  "dependencies": {}
+}
