@@ -5,6 +5,7 @@ import {
   FormField,
   FormSchema
 } from './schema/types'
+import { DeepPartial } from './utilityTypes'
 
 export type ValidationFunction<
   P extends FieldType,
@@ -18,8 +19,8 @@ export type ValidationSchema<T extends FieldTypeSchema<T>> = {
   [P in keyof T]: ValidationFunction<T[P], T>
 }
 
-export type SubmitHandler<T extends FormSchema<any>> = (
-  formValues: { [P in keyof T]: T[P]['value'] }
+export type ValueDispatcher<T extends FormSchema<any>> = (
+  values: { [P in keyof T]: T[P]['value'] }
 ) => void
 
 export interface UseFormOptions<T extends FieldTypeSchema<T>> {
@@ -47,3 +48,14 @@ export interface UseFormProps<T extends FormSchema<any>> {
   submitForm: FormSubmitHandler
   updateValue: ValueUpdater<{ [K in keyof T]: T[K]['type'] }>
 }
+
+export type ChainDispatcher<
+  A extends Record<string, unknown>,
+  D extends Record<string, unknown>,
+  I,
+  R extends (payload: I) => void
+> = <U extends A & { type: string }>(
+  dispatch: (action: U) => void,
+  dependencies: D,
+  actionCreators: ((data: I & D) => U)[]
+) => R
