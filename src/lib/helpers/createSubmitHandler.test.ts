@@ -24,7 +24,7 @@ describe('createSubmitHandler', () => {
 
     expect(submitHandler).toEqual(expect.any(Function))
 
-    submitHandler()
+    submitHandler({ preventDefault: () => {} } as any)
 
     expect(dispatch).toHaveBeenCalledTimes(1)
     expect(dispatch).toHaveBeenCalledWith({ name: 'test', age: 25 })

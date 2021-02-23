@@ -1,4 +1,4 @@
-import isFieldTypeSchema from 'lib/typeGuards/isFieldTypeSchema'
+import isFieldTypeSchema from '../typeGuards/isFieldTypeSchema'
 import schemaCreator from '../schema'
 import { FieldTypeSchema, FormSchema } from '../schema/types'
 

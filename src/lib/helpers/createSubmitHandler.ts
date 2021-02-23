@@ -5,7 +5,9 @@ import { FormSubmitHandler, SubmitHandler } from '../types'
 const createSubmitHandler = <T extends FieldTypeSchema<any>>(
   submitHandler: SubmitHandler<FormSchema<T>>,
   values: FormSchema<T>
-): FormSubmitHandler => (): void =>
+): FormSubmitHandler => (e): void => {
+  e.preventDefault()
   submitHandler(mapValues(values, (field) => field.value))
+}
 
 export default createSubmitHandler

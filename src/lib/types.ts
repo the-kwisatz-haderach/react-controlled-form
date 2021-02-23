@@ -1,3 +1,4 @@
+import { FormEvent } from 'react'
 import {
   FieldType,
   FieldTypeSchema,
@@ -25,7 +26,7 @@ export interface UseFormOptions<T extends FieldTypeSchema<T>> {
   validationSchema: ValidationSchema<T>
 }
 
-export type FormSubmitHandler = () => void
+export type FormSubmitHandler = (e: FormEvent) => void
 
 export type ValueUpdater<T extends FieldTypeSchema<any>> = <
   P extends keyof T & string

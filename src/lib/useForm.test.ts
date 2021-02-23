@@ -33,7 +33,7 @@ describe('useForm', () => {
         result.current.updateValue({ key: 'name', value: 'hello world' })
       })
       act(() => {
-        result.current.submitForm()
+        result.current.submitForm({ preventDefault: () => ({}) } as any)
       })
 
       expect(submitHandler).toHaveBeenCalledTimes(1)
