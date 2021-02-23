@@ -1,6 +1,6 @@
+import type { Reducer } from 'react'
 import type { FormActions, UPDATE_VALUE } from './actions'
-import { FieldType, FieldTypeSchema, FormSchema } from '../schema/types'
-import { Reducer } from 'react'
+import type { FieldType, FieldTypeSchema, FormSchema } from '../schema/types'
 
 export type UpdateFieldValueAction = <
   T extends { key: keyof FormSchema<FieldTypeSchema<any>>; value?: any }

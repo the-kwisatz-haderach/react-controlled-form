@@ -34,7 +34,7 @@ export type FormField<T extends FieldType> = T extends 'text'
   ? CheckboxField
   : CustomField
 
-export type FieldTypeSchema<T> = {
+export type FieldTypeSchema<T extends Record<string, unknown>> = {
   [K in keyof T & string]: FieldType
 }
 

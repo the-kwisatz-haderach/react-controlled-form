@@ -1,5 +1,5 @@
-import type { UseFormProps } from 'lib/types'
 import React from 'react'
+import type { UseFormProps } from 'lib/types'
 
 export type FormProps = UseFormProps<any> & { backgroundColor: string }
 

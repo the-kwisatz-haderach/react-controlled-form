@@ -1,6 +1,6 @@
-import { schemaCreator } from '../schema/createFormFields'
+import isFieldTypeSchema from 'lib/typeGuards/isFieldTypeSchema'
+import schemaCreator from '../schema'
 import { FieldTypeSchema, FormSchema } from '../schema/types'
-import { isFieldTypeSchema } from '../typeguards'
 
 const initFormState = <T extends FieldTypeSchema<any>>(
   initialState: FormSchema<T> | T

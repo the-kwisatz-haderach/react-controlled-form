@@ -1,6 +1,6 @@
 import formReducer from './formReducer'
-import * as actions from './actions'
-import schemaCreator from 'lib/schema'
+import { updateFieldValue } from './actions'
+import schemaCreator from '../schema'
 
 const formSchema = schemaCreator({
   name: 'text',
@@ -13,8 +13,8 @@ describe('formReducer', () => {
     expect(
       formReducer(
         formSchema,
-        actions.updateFieldValue({ key: 'name', type: 'text', value: 'hello' })
+        updateFieldValue({ key: 'name', type: 'text', value: 'hello' })
       )
-    ).toEqual({})
+    ).toEqual({ ...formSchema, name: { ...formSchema.name, value: 'hello' } })
   })
 })

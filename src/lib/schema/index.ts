@@ -1,4 +1,2 @@
-import schemaCreator from './createFormFields'
+export { default } from './schemaCreator'
 export type { FieldTypeSchema, FormSchema } from './types'
-
-export default schemaCreator

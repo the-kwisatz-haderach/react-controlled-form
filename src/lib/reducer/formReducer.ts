@@ -1,4 +1,4 @@
-import { UPDATE_VALUE, CLEAR_FORM, FormActions } from './actions'
+import { UPDATE_VALUE, FormActions } from './actions'
 import { FieldTypeSchema, FormSchema } from '../schema/types'
 
 const formReducer = <T extends FieldTypeSchema<Record<string, unknown>>>(
@@ -14,9 +14,6 @@ const formReducer = <T extends FieldTypeSchema<Record<string, unknown>>>(
           value: action.payload.value
         }
       }
-    }
-    case CLEAR_FORM: {
-      return state
     }
     default: {
       return state
