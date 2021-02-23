@@ -5,10 +5,10 @@
   "main": "index.js",
   "scripts": {
     "test": "jest --watchAll",
-    "lint": "npx eslint .",
+    "lint": "npx eslint '*/**/*.{ts,js}' --quiet",
     "lint:fix": "npx eslint --fix .",
-    "format": "prettier -w '**/*.{ts,js}'",
-    "clean": "npm run lint:fix",
+    "format": "prettier -w '*/**/*.{ts,js}'",
+    "clean": "npm run lint:fix && npm run format",
     "storybook": "start-storybook -p 6006",
     "build-storybook": "build-storybook"
   },
