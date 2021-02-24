@@ -13,6 +13,9 @@ import { DeepPartial } from './utilityTypes'
   sanitation
   clearForm
   take options and return actionCreators to run in sequence
+
+  onUpdateValue: function | keyof existing[]
+  onSubmit: function | keyof existing[]
 */
 
 const updateFieldValueAction = (
