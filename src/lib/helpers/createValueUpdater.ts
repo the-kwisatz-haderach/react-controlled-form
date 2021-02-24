@@ -12,16 +12,6 @@ type OnValueUpdateDispatcher = ChainDispatcher<
   ValueUpdater<any>
 >
 
-// const createValueUpdater: LOL = <T extends FieldTypeSchema<any>>(
-//   dispatch: FormActionDispatcher,
-//   values: FormSchema<T>,
-//   actions: FormActionCreator[]
-// ): ValueUpdater<T> => (payload): void => {
-//   actions.forEach((action) => {
-//     dispatch(action({ payload, values }))
-//   })
-// }
-
 const createValueUpdater: OnValueUpdateDispatcher = (
   dispatch,
   values,

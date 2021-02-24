@@ -21,13 +21,4 @@ const createSubmitHandler = <T extends FieldTypeSchema<any>>(
   submitHandler(mapValues(values, (field) => field.value))
 }
 
-// const createSubmitHandler = <T extends FieldTypeSchema<any>>(
-//   dispatch: ValueDispatcher<FormSchema<T>>,
-//   values: FormSchema<T>,
-//   actions: FormActionCreator[]
-// ): FormSubmitHandler => (e): void => {
-//   e.preventDefault()
-//   dispatch(mapValues(values, (field) => field.value))
-// }
-
 export default createSubmitHandler
