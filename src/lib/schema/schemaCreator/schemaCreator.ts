@@ -12,8 +12,8 @@ type SchemaCreator<T extends FieldTypeSchema<any>> = (
 const schemaCreator = <T extends FieldTypeSchema<any>>(
   fieldSchema: T
 ): SchemaCreator<T> => {
-  const formSchema = mapValues(fieldSchema, (fieldType) =>
-    fieldCreator(fieldType)
+  const formSchema = mapValues(fieldSchema, (fieldType, fieldKey) =>
+    fieldCreator({ type: fieldType, name: fieldKey })
   )
   return (
     values:

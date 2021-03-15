@@ -6,7 +6,9 @@ export interface FormFieldBase<T extends FieldType> {
   type: T
   label: string
   error: string
+  name: string
   disabled: boolean
+  required: boolean
 }
 
 export interface CustomField extends FormFieldBase<'custom'> {
@@ -16,14 +18,21 @@ export interface CustomField extends FormFieldBase<'custom'> {
 export interface TextField extends FormFieldBase<'text'> {
   value: string
   placeholder: string
+  pattern: string
 }
 
 export interface NumberField extends FormFieldBase<'number'> {
   value: number
+  min?: number
+  max?: number
+  placeholder: string
+  decimals: number
+  step: number
 }
 
 export interface CheckboxField extends FormFieldBase<'checkbox'> {
   value: boolean
+  indeterminate: boolean
 }
 
 export type FormField<T extends FieldType> = T extends 'text'
@@ -47,11 +56,11 @@ export type FormSchema<T extends FieldTypeSchema<T>> = {
 }
 
 export type BaseFieldCreator = <T extends FieldType>(
-  type: T
+  values: Pick<FormFieldBase<T>, 'type' | 'name'>
 ) => FormFieldBase<T>
 
 export type FieldCreator = <T extends FieldType>(
-  type: T
+  values: Pick<FormFieldBase<T>, 'type' | 'name'>
 ) => DefaultFormFields<FieldType>[T] & FormFieldBase<T>
 
 export type Defaults<T extends string, U, V> = {

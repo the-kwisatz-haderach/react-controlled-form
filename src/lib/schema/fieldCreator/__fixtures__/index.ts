@@ -4,5 +4,7 @@ export const formFieldBase: FormFieldBase<any> = {
   type: 'text',
   label: '',
   error: '',
-  disabled: false
+  disabled: false,
+  name: '',
+  required: false
 }

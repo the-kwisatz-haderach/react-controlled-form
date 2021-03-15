@@ -1,10 +1,12 @@
 import { BaseFieldCreator } from '../types'
 
-const createBaseField: BaseFieldCreator = (type) => ({
+const createBaseField: BaseFieldCreator = ({ type, name }) => ({
   type,
+  name,
   label: '',
   error: '',
-  disabled: false
+  disabled: false,
+  required: false
 })
 
 export default createBaseField

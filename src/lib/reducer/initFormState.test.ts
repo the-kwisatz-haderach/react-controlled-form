@@ -44,14 +44,22 @@ describe('initFormState', () => {
           label: '',
           error: '',
           placeholder: '',
-          type: 'text'
+          type: 'text',
+          required: false,
+          name: 'name',
+          pattern: ''
         },
         age: {
           value: 0,
           disabled: false,
           label: '',
           error: '',
-          type: 'number'
+          type: 'number',
+          required: false,
+          name: 'age',
+          placeholder: '',
+          step: 1,
+          decimals: 0
         }
       }
 

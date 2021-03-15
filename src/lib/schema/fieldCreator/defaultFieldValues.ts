@@ -3,16 +3,21 @@ import { DefaultFormFields } from '../types'
 const defaultFieldValues: DefaultFormFields = {
   text: {
     value: '',
-    placeholder: ''
+    placeholder: '',
+    pattern: ''
   },
   checkbox: {
-    value: false
+    value: false,
+    indeterminate: false
   },
   custom: {
     value: ''
   },
   number: {
-    value: 0
+    value: 0,
+    placeholder: '',
+    decimals: 0,
+    step: 1
   }
 }
 

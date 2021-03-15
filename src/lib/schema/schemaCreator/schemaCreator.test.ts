@@ -15,15 +15,15 @@ describe('schemaCreator', () => {
       })
       expect(makeTestSchema()).toEqual({
         name: {
-          ...createBaseField('text'),
+          ...createBaseField({ name: 'name', type: 'text' }),
           ...defaultFieldValues.text
         },
         age: {
-          ...createBaseField('number'),
+          ...createBaseField({ name: 'age', type: 'number' }),
           ...defaultFieldValues.number
         },
         other: {
-          ...createBaseField('custom'),
+          ...createBaseField({ name: 'other', type: 'custom' }),
           ...defaultFieldValues.custom
         }
       })
@@ -44,17 +44,17 @@ describe('schemaCreator', () => {
         })
       ).toEqual({
         name: {
-          ...createBaseField('text'),
+          ...createBaseField({ name: 'name', type: 'text' }),
           ...defaultFieldValues.text,
           value: 'Jesus'
         },
         age: {
-          ...createBaseField('number'),
+          ...createBaseField({ name: 'age', type: 'number' }),
           ...defaultFieldValues.number,
           value: 10000000
         },
         description: {
-          ...createBaseField('custom'),
+          ...createBaseField({ name: 'description', type: 'custom' }),
           ...defaultFieldValues.custom,
           value: 'child of god'
         }
@@ -85,19 +85,19 @@ describe('schemaCreator', () => {
         })
       ).toEqual({
         name: {
-          ...createBaseField('text'),
+          ...createBaseField({ name: 'name', type: 'text' }),
           ...defaultFieldValues.text,
           value: 'test',
           disabled: true
         },
         age: {
-          ...createBaseField('number'),
+          ...createBaseField({ name: 'age', type: 'number' }),
           ...defaultFieldValues.number,
           label: 'ageLabel',
           value: 25000
         },
         description: {
-          ...createBaseField('custom'),
+          ...createBaseField({ name: 'description', type: 'custom' }),
           ...defaultFieldValues.custom,
           label: 'customLabel',
           value: 'testing'
