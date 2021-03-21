@@ -1,33 +1,17 @@
-import { FormEvent } from 'react'
+import { SyntheticEvent } from 'react'
 import {
-  FieldType,
   FieldTypeSchema,
   FormField,
-  FormSchema
+  FormConstants,
+  FormState
 } from './schema/types'
-import { DeepPartial } from './utilityTypes'
 
-export type ValidationFunction<
-  P extends FieldType,
-  T extends FieldTypeSchema<Record<string, unknown>>
-> = (
-  value: FormField<P>['value'],
-  states: { initialState: FormSchema<T>; currentState: FormSchema<T> }
-) => string
-
-export type ValidationSchema<T extends FieldTypeSchema<T>> = {
-  [P in keyof T]: ValidationFunction<T[P], T>
-}
-
-export type ValueDispatcher<T extends FormSchema<any>> = (
-  values: { [P in keyof T]: T[P]['value'] }
+export type SubmitHandler<T extends FieldTypeSchema> = (
+  values: { [P in keyof T]: FormField<T[P]>['value'] },
+  e: React.SyntheticEvent<HTMLFormElement, Event>
 ) => void
 
-export interface UseFormOptions<T extends FieldTypeSchema<T>> {
-  validationSchema: ValidationSchema<T>
-}
-
-export type FormSubmitHandler = (e: FormEvent) => void
+export type SubmitForm = (e: SyntheticEvent<HTMLFormElement>) => void
 
 export type ValueUpdater<T extends FieldTypeSchema<any>> = <
   P extends keyof T & string
@@ -43,19 +27,10 @@ export type ValueUpdater<T extends FieldTypeSchema<any>> = <
       }
 ) => void
 
-export interface UseFormProps<T extends FormSchema<any>> {
-  values: T
-  submitForm: FormSubmitHandler
-  updateValue: ValueUpdater<{ [K in keyof T]: T[K]['type'] }>
+export interface UseFormProps<T extends FieldTypeSchema>
+  extends FormConstants<T> {
+  state: FormState<T>
+  submitForm: SubmitForm
+  updateValue: ValueUpdater<T>
+  hasErrors: boolean
 }
-
-export type ChainDispatcher<
-  A extends Record<string, unknown>,
-  D extends Record<string, unknown>,
-  I,
-  R extends (payload: I) => void
-> = <U extends A & { type: string }>(
-  dispatch: (action: U) => void,
-  dependencies: D,
-  actionCreators: ((data: I & D) => U)[]
-) => R

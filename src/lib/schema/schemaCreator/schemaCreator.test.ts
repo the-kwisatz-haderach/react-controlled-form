@@ -1,5 +1,6 @@
-import createBaseField from '../fieldCreator/createBaseField'
-import defaultFieldValues from '../fieldCreator/defaultFieldValues'
+import { createBaseField } from '../createBaseField'
+import defaultFieldValues from '../defaultFieldValues'
+import { FormSchema } from '../types'
 import schemaCreator from './schemaCreator'
 
 describe('schemaCreator', () => {
@@ -13,7 +14,12 @@ describe('schemaCreator', () => {
         age: 'number',
         other: 'custom'
       })
-      expect(makeTestSchema()).toEqual({
+
+      const expected: FormSchema<{
+        name: 'text'
+        age: 'number'
+        other: 'custom'
+      }> = {
         name: {
           ...createBaseField({ name: 'name', type: 'text' }),
           ...defaultFieldValues.text
@@ -26,7 +32,8 @@ describe('schemaCreator', () => {
           ...createBaseField({ name: 'other', type: 'custom' }),
           ...defaultFieldValues.custom
         }
-      })
+      }
+      expect(makeTestSchema()).toEqual(expected)
     })
   })
   describe('when values are provided to the formSchema creator using the shorthand', () => {
@@ -36,13 +43,12 @@ describe('schemaCreator', () => {
         age: 'number',
         description: 'custom'
       })
-      expect(
-        makeTestSchema({
-          name: 'Jesus',
-          age: 10000000,
-          description: 'child of god'
-        })
-      ).toEqual({
+
+      const expected: FormSchema<{
+        name: 'text'
+        age: 'number'
+        description: 'custom'
+      }> = {
         name: {
           ...createBaseField({ name: 'name', type: 'text' }),
           ...defaultFieldValues.text,
@@ -58,7 +64,15 @@ describe('schemaCreator', () => {
           ...defaultFieldValues.custom,
           value: 'child of god'
         }
-      })
+      }
+
+      expect(
+        makeTestSchema({
+          name: 'Jesus',
+          age: 10000000,
+          description: 'child of god'
+        })
+      ).toEqual(expected)
     })
   })
   describe('when multiple field values are provided to the formSchema creator', () => {
@@ -68,22 +82,12 @@ describe('schemaCreator', () => {
         age: 'number',
         description: 'custom'
       })
-      expect(
-        makeTestSchema({
-          name: {
-            value: 'test',
-            disabled: true
-          },
-          age: {
-            label: 'ageLabel',
-            value: 25000
-          },
-          description: {
-            label: 'customLabel',
-            value: 'testing'
-          }
-        })
-      ).toEqual({
+
+      const expected: FormSchema<{
+        name: 'text'
+        age: 'number'
+        description: 'custom'
+      }> = {
         name: {
           ...createBaseField({ name: 'name', type: 'text' }),
           ...defaultFieldValues.text,
@@ -102,7 +106,23 @@ describe('schemaCreator', () => {
           label: 'customLabel',
           value: 'testing'
         }
-      })
+      }
+      expect(
+        makeTestSchema({
+          name: {
+            value: 'test',
+            disabled: true
+          },
+          age: {
+            label: 'ageLabel',
+            value: 25000
+          },
+          description: {
+            label: 'customLabel',
+            value: 'testing'
+          }
+        })
+      ).toEqual(expected)
     })
   })
 })

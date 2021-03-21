@@ -1,8 +1,8 @@
-import { FormActions } from '../reducer/actions'
-
 export type FieldType = 'text' | 'number' | 'checkbox' | 'custom'
 
-export interface FormFieldBase<T extends FieldType> {
+export type DynamicField = 'value' | 'error' | 'disabled' | 'required'
+
+export interface FieldBase<T extends FieldType> {
   type: T
   label: string
   error: string
@@ -11,17 +11,17 @@ export interface FormFieldBase<T extends FieldType> {
   required: boolean
 }
 
-export interface CustomField extends FormFieldBase<'custom'> {
+export interface CustomField extends FieldBase<'custom'> {
   value: string
 }
 
-export interface TextField extends FormFieldBase<'text'> {
+export interface TextField extends FieldBase<'text'> {
   value: string
   placeholder: string
   pattern: string
 }
 
-export interface NumberField extends FormFieldBase<'number'> {
+export interface NumberField extends FieldBase<'number'> {
   value: number
   min?: number
   max?: number
@@ -30,7 +30,7 @@ export interface NumberField extends FormFieldBase<'number'> {
   step: number
 }
 
-export interface CheckboxField extends FormFieldBase<'checkbox'> {
+export interface CheckboxField extends FieldBase<'checkbox'> {
   value: boolean
   indeterminate: boolean
 }
@@ -43,28 +43,37 @@ export type FormField<T extends FieldType> = T extends 'text'
   ? CheckboxField
   : CustomField
 
-export type FieldTypeSchema<T extends Record<string, unknown>> = {
-  [K in keyof T & string]: FieldType
+export type FieldTypeSchema<T extends Record<string, FieldType> = any> = {
+  [K in keyof T]: FieldType
 }
 
-export type DefaultFormFields<T extends FieldType = FieldType> = {
-  [K in T & string]: Omit<FormField<K>, keyof FormFieldBase<K>>
+export type FieldDefaults<T extends FieldType> = Omit<
+  FormField<T>,
+  keyof FieldBase<T>
+>
+
+export type SchemaDefaults = {
+  [K in FieldType]: FieldDefaults<K>
 }
 
-export type FormSchema<T extends FieldTypeSchema<T>> = {
-  [P in keyof T & string]: FormFieldBase<T[P]> & DefaultFormFields<T[P]>[T[P]]
+export type FormState<T extends FieldTypeSchema> = {
+  [K in keyof T]: {
+    [U in DynamicField]: FormField<T[K]>[U]
+  }
 }
 
-export type BaseFieldCreator = <T extends FieldType>(
-  values: Pick<FormFieldBase<T>, 'type' | 'name'>
-) => FormFieldBase<T>
+export type FieldConstants<T extends FieldType> = Omit<
+  FormField<T>,
+  DynamicField
+>
 
-export type FieldCreator = <T extends FieldType>(
-  values: Pick<FormFieldBase<T>, 'type' | 'name'>
-) => DefaultFormFields<FieldType>[T] & FormFieldBase<T>
-
-export type Defaults<T extends string, U, V> = {
-  [K in T & string]: Omit<U, keyof V>
+export type FormConstants<T extends FieldTypeSchema> = {
+  fields: (keyof T)[]
+  props: {
+    [K in keyof T & string]: FieldConstants<T[K]>
+  }
 }
 
-export type FormActionDispatcher = (action: FormActions) => void
+export type FormSchema<T extends FieldTypeSchema> = {
+  [K in keyof T & string]: FieldBase<T[K]> & FieldDefaults<T[K]>
+}

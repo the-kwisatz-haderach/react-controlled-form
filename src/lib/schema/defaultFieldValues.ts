@@ -1,6 +1,12 @@
-import { DefaultFormFields } from '../types'
+import type { SchemaDefaults } from './types'
 
-const defaultFieldValues: DefaultFormFields = {
+const defaultFieldValues: SchemaDefaults = {
+  number: {
+    value: 0,
+    placeholder: '',
+    decimals: 0,
+    step: 1
+  },
   text: {
     value: '',
     placeholder: '',
@@ -12,13 +18,7 @@ const defaultFieldValues: DefaultFormFields = {
   },
   custom: {
     value: ''
-  },
-  number: {
-    value: 0,
-    placeholder: '',
-    decimals: 0,
-    step: 1
   }
-}
+} as const
 
 export default defaultFieldValues

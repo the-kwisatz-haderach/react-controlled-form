@@ -1,3 +1,1 @@
-import schemaCreator from './schemaCreator'
-
-export default schemaCreator
+export { default as schemaCreator } from './schemaCreator'

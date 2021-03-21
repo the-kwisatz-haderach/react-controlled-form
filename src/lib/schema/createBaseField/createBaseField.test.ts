@@ -1,12 +1,13 @@
 import fieldTypes from '../../fieldTypes'
 import createBaseField from './createBaseField'
-import { formFieldBase } from './__fixtures__'
+import { fieldBase } from './__fixtures__'
 
 describe('createBaseField', () => {
   it('returns an object containing the base fields, common to all field types', () => {
     fieldTypes.forEach((fieldType) => {
-      expect(createBaseField({ name: '', type: fieldType })).toEqual({
-        ...formFieldBase,
+      expect(createBaseField({ name: 'test', type: fieldType })).toEqual({
+        ...fieldBase,
+        name: 'test',
         type: fieldType
       })
     })

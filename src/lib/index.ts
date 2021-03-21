@@ -1,5 +1,2 @@
-import useForm from './useForm'
-import schemaCreator from './schema'
-
-export default useForm
-export { schemaCreator }
+export { default as useForm } from './useForm'
+export { schemaCreator } from './schema'

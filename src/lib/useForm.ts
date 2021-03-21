@@ -1,66 +1,88 @@
-import { useReducer, useCallback } from 'react'
-import { FieldTypeSchema, FormSchema } from './schema'
-import { formReducer, initFormState, FormReducer } from './reducer'
-import { createSubmitHandler, createValueUpdater } from './helpers'
-import { ValueDispatcher, UseFormProps } from './types'
-import { updateFieldValue } from './reducer/actions'
-import { FieldType, FormField } from './schema/types'
-import { DeepPartial } from './utilityTypes'
+import { useCallback, useMemo, useReducer } from 'react'
+import { updateFieldValue } from './actions/actions'
+import createChainDispatcher from './helpers/createChainDispatcher/createChainDispatcher'
+import { defaultPreventer } from './helpers/createEventInterceptor/createEventInterceptor'
+import formConstantsCreator from './helpers/formConstantsCreator/formConstantsCreator'
+import { initFormState } from './helpers/initFormState'
+import { createFormReducer } from './reducers'
+import { FieldTypeSchema, FormSchema, schemaCreator } from './schema'
+import { FormConstants, FormState } from './schema/types'
+import isFieldTypeSchema from './typeGuards/isFieldTypeSchema'
+import { SubmitForm, SubmitHandler, UseFormProps, ValueUpdater } from './types'
 
-/*
-  globalFieldOptions
-  validationMode: onSubmit | onChange
-  sanitation
-  clearForm
-  take options and return actionCreators to run in sequence
+const submitDispatcher = createChainDispatcher([])
+const valueDispatcher = createChainDispatcher([])
 
-  onUpdateValue: function | keyof existing[]
-  onSubmit: function | keyof existing[]
-*/
+const useForm = <T extends FieldTypeSchema>(
+  schema: FormSchema<T> | T,
+  submitHandler: SubmitHandler<T>
+): UseFormProps<T> => {
+  const formSchema = useMemo(
+    () => (isFieldTypeSchema(schema) ? schemaCreator(schema)() : schema),
+    [schema]
+  )
 
-const updateFieldValueAction = (
-  data: {
-    key: keyof FormSchema<any>
-    value?: string | number | boolean | undefined
-  } & {
-    values: FormSchema<any>
-  }
-) =>
-  updateFieldValue({
-    ...data,
-    type: data.values[data.key].type as FieldType
-  })
+  const { props, fields }: FormConstants<T> = useMemo(
+    () => formConstantsCreator(formSchema),
+    [formSchema]
+  )
 
-type FieldDefaults = {
-  [K in FieldType]: FormField<K>
-}
-
-export type Options = DeepPartial<{
-  fieldDefaults: FieldDefaults
-}>
-
-const useForm = <T extends FieldTypeSchema<Record<string, unknown>>>(
-  formSchema: FormSchema<T> | T,
-  submitHandler: ValueDispatcher<FormSchema<T>>,
-  options: Options = {}
-): UseFormProps<FormSchema<T>> => {
-  const [values, dispatch] = useReducer<FormReducer<T>, T | FormSchema<T>>(
-    formReducer,
+  const [state, dispatch] = useReducer(
+    createFormReducer(initFormState(formSchema)),
     formSchema,
     initFormState
   )
 
-  const updateValue = useCallback(
-    createValueUpdater(dispatch, { values }, [updateFieldValueAction]),
-    [values]
+  const updateValue: ValueUpdater<T> = useCallback(
+    (payload) => {
+      let value = payload.value
+      const { type } = props[payload.key]
+      if (type === 'checkbox' && payload.value === undefined) {
+        value = !state[payload.key].value
+      }
+      dispatch(
+        updateFieldValue({
+          ...payload,
+          value
+        })
+      )
+      valueDispatcher(dispatch)
+    },
+    [state, props, valueDispatcher, updateFieldValue, dispatch]
   )
 
-  const submitForm = useCallback(
-    createSubmitHandler(submitHandler)(dispatch, values, []),
-    [submitHandler, values]
+  const submitForm: SubmitForm = useCallback(
+    defaultPreventer((e) => {
+      submitDispatcher(dispatch)
+      const formValues = Object.entries(state).reduce(
+        (acc, [key, values]) => ({
+          ...acc,
+          [key]: values.value
+        }),
+        {} as {
+          [K in keyof FormState<T>]: FormState<T>[keyof T]['value']
+        }
+      )
+      submitHandler(formValues, e)
+    }),
+    [state, submitHandler, dispatch, submitDispatcher, defaultPreventer]
   )
 
-  return { values, submitForm, updateValue }
+  const fieldHasErrors = useCallback(
+    (field: FormState<T>[keyof FormState<T>]) => field.error !== '',
+    []
+  )
+
+  return {
+    submitForm,
+    updateValue,
+    state,
+    fields,
+    props,
+    get hasErrors() {
+      return Object.values(state).some(fieldHasErrors)
+    }
+  }
 }
 
 export default useForm
