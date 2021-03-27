@@ -1,4 +1,4 @@
-import lib, { schemaCreator } from './lib'
+import { useForm, schemaCreator } from './lib'
 
-export default lib
+export default useForm
 export { schemaCreator }

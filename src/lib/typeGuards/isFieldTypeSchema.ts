@@ -1,7 +1,7 @@
 import { FieldTypeSchema } from 'lib/schema'
 import isFieldType from './isFieldType'
 
-const isFieldTypeSchema = <T extends FieldTypeSchema<Record<string, unknown>>>(
+const isFieldTypeSchema = <T extends FieldTypeSchema>(
   arg: unknown
 ): arg is T => {
   if (typeof arg !== 'object' || arg === null) return false

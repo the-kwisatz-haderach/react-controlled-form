@@ -68,8 +68,8 @@ export type FieldConstants<T extends FieldType> = Omit<
 >
 
 export type FormConstants<T extends FieldTypeSchema> = {
-  fields: (keyof T)[]
-  props: {
+  fieldKeys: (keyof T)[]
+  fieldProps: {
     [K in keyof T & string]: FieldConstants<T[K]>
   }
 }

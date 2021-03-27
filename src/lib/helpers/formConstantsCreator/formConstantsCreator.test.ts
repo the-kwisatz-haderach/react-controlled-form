@@ -15,8 +15,8 @@ describe('formConstantsCreator', () => {
       age: 'number'
       isLeet: 'checkbox'
     }> = {
-      fields: ['name', 'age', 'isLeet'],
-      props: {
+      fieldKeys: ['name', 'age', 'isLeet'],
+      fieldProps: {
         name: {
           pattern: '',
           placeholder: '',
