@@ -6,6 +6,8 @@
   },
   "extends": [
     "eslint:recommended",
+    "plugin:react/recommended",
+    "plugin:react-hooks/recommended",
     "standard",
     "plugin:@typescript-eslint/eslint-recommended",
     "plugin:@typescript-eslint/recommended",
@@ -16,7 +18,14 @@
     "plugin:import/warnings",
     "plugin:import/typescript"
   ],
-  "plugins": ["import", "@typescript-eslint", "prettier", "jest"],
+  "plugins": [
+    "import",
+    "@typescript-eslint",
+    "prettier",
+    "jest",
+    "react",
+    "react-hooks"
+  ],
   "parserOptions": {
     "ecmaVersion": 2018,
     "sourceType": "module",
