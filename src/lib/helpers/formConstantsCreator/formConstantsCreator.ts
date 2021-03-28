@@ -13,6 +13,7 @@ const formConstantsCreator = <T extends FieldTypeSchema>(
   const fieldKeys = Object.keys(formSchema)
   return {
     fieldKeys,
+    fieldValidators: null,
     fieldProps: fieldKeys.reduce<FormConstants<T>['fieldProps']>(
       (acc, curr) => ({
         ...acc,

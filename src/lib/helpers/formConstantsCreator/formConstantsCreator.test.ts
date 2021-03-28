@@ -16,18 +16,17 @@ describe('formConstantsCreator', () => {
       isLeet: 'checkbox'
     }> = {
       fieldKeys: ['name', 'age', 'isLeet'],
+      fieldValidators: null,
       fieldProps: {
         name: {
           pattern: '',
           placeholder: '',
           name: 'name',
-          type: 'text',
-          label: ''
+          type: 'text'
         },
         age: {
           name: 'age',
           type: 'number',
-          label: '',
           step: 1,
           decimals: 0,
           placeholder: ''
@@ -35,7 +34,6 @@ describe('formConstantsCreator', () => {
         isLeet: {
           name: 'isLeet',
           type: 'checkbox',
-          label: '',
           indeterminate: false
         }
       }
