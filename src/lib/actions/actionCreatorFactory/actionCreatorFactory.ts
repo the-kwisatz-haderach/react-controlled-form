@@ -1,18 +1,25 @@
-export function actionCreatorFactory<P extends void, T extends string>(
+function actionCreatorFactory<P extends void, T extends string>(
   type: T
 ): (payload?: P) => { type: T }
 
-export function actionCreatorFactory<
+function actionCreatorFactory<
   P extends Record<string, unknown>,
   T extends string
 >(type: T): (payload: P) => { type: T; payload: P }
 
-export default function actionCreatorFactory<
-  P extends Record<string, unknown> | void,
+function actionCreatorFactory<
+  P extends Record<string, unknown>,
   T extends string
->(type: T) {
-  return (payload: P): { type: T; payload: P } => ({
+>(
+  type: T,
+  payloadPreparer?: (payload: P) => P
+): (payload: P) => { type: T; payload: P }
+
+function actionCreatorFactory(type: any, payloadPreparer?: any) {
+  return (payload: any) => ({
     type,
-    payload
+    payload: payloadPreparer ? payloadPreparer(payload) : payload
   })
 }
+
+export default actionCreatorFactory
