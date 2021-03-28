@@ -9,7 +9,8 @@ const createBaseField: BaseFieldCreator = ({ type, name }) => ({
   name,
   error: '',
   disabled: false,
-  required: false
+  required: false,
+  validators: []
 })
 
 export default createBaseField

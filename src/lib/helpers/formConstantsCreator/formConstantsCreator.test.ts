@@ -22,19 +22,22 @@ describe('formConstantsCreator', () => {
           pattern: '',
           placeholder: '',
           name: 'name',
-          type: 'text'
+          type: 'text',
+          validators: []
         },
         age: {
           name: 'age',
           type: 'number',
           step: 1,
           decimals: 0,
-          placeholder: ''
+          placeholder: '',
+          validators: []
         },
         isLeet: {
           name: 'isLeet',
           type: 'checkbox',
-          indeterminate: false
+          indeterminate: false,
+          validators: []
         }
       }
     }

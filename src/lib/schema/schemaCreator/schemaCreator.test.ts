@@ -83,6 +83,13 @@ describe('schemaCreator', () => {
         description: 'custom'
       })
 
+      const stringValidator = (value: string) => {
+        if (value !== '') {
+          return 'Value cant be empty!'
+        }
+        return ''
+      }
+
       const expected: FormSchema<{
         name: 'text'
         age: 'number'
@@ -92,7 +99,8 @@ describe('schemaCreator', () => {
           ...createBaseField({ name: 'name', type: 'text' }),
           ...defaultFieldValues.text,
           value: 'test',
-          disabled: true
+          disabled: true,
+          validators: [stringValidator]
         },
         age: {
           ...createBaseField({ name: 'age', type: 'number' }),
@@ -111,7 +119,8 @@ describe('schemaCreator', () => {
         makeTestSchema({
           name: {
             value: 'test',
-            disabled: true
+            disabled: true,
+            validators: [stringValidator]
           },
           age: {
             label: 'ageLabel',

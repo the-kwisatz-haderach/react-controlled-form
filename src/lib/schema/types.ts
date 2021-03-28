@@ -2,6 +2,18 @@ export type FieldType = 'text' | 'number' | 'checkbox' | 'custom'
 
 export type DynamicField = 'value' | 'error' | 'disabled' | 'required'
 
+/* eslint-disable no-use-before-define */
+export type FieldValidator<
+  T extends FieldType,
+  U extends FieldTypeSchema = FieldTypeSchema
+> = (
+  value: FormField<T>['value'],
+  options: {
+    getInitialValue: () => FormField<T>['value']
+    getFormState: () => FormState<U>
+  }
+) => string
+
 export interface FieldBase<T extends FieldType> {
   type: T
   label?: string
@@ -9,6 +21,7 @@ export interface FieldBase<T extends FieldType> {
   name: string
   disabled: boolean
   required: boolean
+  validators: FieldValidator<T>[]
 }
 
 export interface CustomField extends FieldBase<'custom'> {
