@@ -15,14 +15,14 @@ describe('createFieldValidator', () => {
     )
     expect(
       textValidator('test', {
-        getInitialValue: () => '',
-        getFormState: () => ({})
+        initialValue: '',
+        formState: {}
       })
-    ).toEqual('')
+    ).toBeUndefined()
     expect(
       textValidator('', {
-        getInitialValue: () => '',
-        getFormState: () => ({})
+        initialValue: '',
+        formState: {}
       })
     ).toEqual('Value cant be empty!')
   })
@@ -31,20 +31,20 @@ describe('createFieldValidator', () => {
       'text',
       { name: 'text'; age: 'number' }
     >(
-      (value, { getInitialValue }) => value === getInitialValue(),
+      (value, { initialValue }) => value === initialValue,
       'Value cant be same as initial value!'
     )
 
     expect(
       textValidator('', {
-        getInitialValue: () => 'test',
-        getFormState: () => ({} as any)
+        initialValue: 'test',
+        formState: {} as any
       })
-    ).toEqual('')
+    ).toBeUndefined()
     expect(
       textValidator('test', {
-        getInitialValue: () => 'test',
-        getFormState: () => ({} as any)
+        initialValue: 'test',
+        formState: {} as any
       })
     ).toEqual('Value cant be same as initial value!')
   })
@@ -53,31 +53,29 @@ describe('createFieldValidator', () => {
       'text',
       { name: 'text'; age: 'number' }
     >(
-      (value, { getFormState }) =>
-        value === 'sauron' && getFormState().age.value < 54960,
+      (value, { formState }) =>
+        value === 'sauron' && formState.age.value < 54960,
       'Sauron is at least 54,960 years old!'
     )
 
     expect(
       textValidator('sauron', {
-        getInitialValue: () => '',
-        getFormState: () =>
-          ({
-            age: {
-              value: 54960
-            }
-          } as any)
+        initialValue: '',
+        formState: {
+          age: {
+            value: 54960
+          }
+        } as any
       })
-    ).toEqual('')
+    ).toBeUndefined()
     expect(
       textValidator('sauron', {
-        getInitialValue: () => '',
-        getFormState: () =>
-          ({
-            age: {
-              value: 54959
-            }
-          } as any)
+        initialValue: '',
+        formState: {
+          age: {
+            value: 54959
+          }
+        } as any
       })
     ).toEqual('Sauron is at least 54,960 years old!')
   })

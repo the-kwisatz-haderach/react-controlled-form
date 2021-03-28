@@ -19,13 +19,13 @@ describe('initFormState', () => {
         value: '',
         required: false,
         disabled: false,
-        error: ''
+        errors: []
       },
       age: {
         value: 0,
         required: false,
         disabled: false,
-        error: ''
+        errors: []
       }
     }
 
@@ -45,13 +45,13 @@ describe('initFormState', () => {
         value: 'hello',
         required: false,
         disabled: false,
-        error: ''
+        errors: []
       },
       age: {
         value: 22,
         required: false,
         disabled: false,
-        error: ''
+        errors: []
       }
     }
 

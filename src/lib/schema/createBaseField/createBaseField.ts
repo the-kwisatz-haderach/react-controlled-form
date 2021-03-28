@@ -7,7 +7,7 @@ type BaseFieldCreator = <T extends FieldType>(
 const createBaseField: BaseFieldCreator = ({ type, name }) => ({
   type,
   name,
-  error: '',
+  errors: [],
   disabled: false,
   required: false,
   validators: []

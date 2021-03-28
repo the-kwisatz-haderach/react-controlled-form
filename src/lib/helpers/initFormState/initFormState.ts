@@ -6,12 +6,12 @@ const initFormState = <T extends FieldTypeSchema>(
   const fields = Object.keys(formSchema)
   return {
     ...fields.reduce((acc, curr) => {
-      const { value, error, disabled, required } = formSchema[curr]
+      const { value, errors, disabled, required } = formSchema[curr]
       return {
         ...acc,
         [curr]: {
           value,
-          error,
+          errors,
           disabled,
           required
         }

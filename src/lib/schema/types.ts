@@ -1,6 +1,6 @@
 export type FieldType = 'text' | 'number' | 'checkbox' | 'custom'
 
-export type DynamicField = 'value' | 'error' | 'disabled' | 'required'
+export type DynamicField = 'value' | 'errors' | 'disabled' | 'required'
 
 /* eslint-disable no-use-before-define */
 export type FieldValidator<
@@ -9,15 +9,15 @@ export type FieldValidator<
 > = (
   value: FormField<T>['value'],
   options: {
-    getInitialValue: () => FormField<T>['value']
-    getFormState: () => FormState<U>
+    initialValue: FormField<T>['value']
+    formState: FormState<U>
   }
-) => string
+) => string | undefined
 
 export interface FieldBase<T extends FieldType> {
   type: T
   label?: string
-  error: string
+  errors: string[]
   name: string
   disabled: boolean
   required: boolean
@@ -75,19 +75,19 @@ export type FormState<T extends FieldTypeSchema> = {
   }
 }
 
-export type FieldConstants<T extends FieldType> = Omit<
-  FormField<T>,
-  DynamicField
->
+export type FieldProps<T extends FieldType> = Omit<FormField<T>, DynamicField>
 
-export type FormConstants<T extends FieldTypeSchema> = {
-  fieldKeys: (keyof T)[]
-  fieldValidators: any
-  fieldProps: {
-    [K in keyof T & string]: FieldConstants<T[K]>
-  }
+export type FormProps<T extends FieldTypeSchema> = {
+  [K in keyof T & string]: FieldProps<T[K]>
 }
 
 export type FormSchema<T extends FieldTypeSchema> = {
   [K in keyof T & string]: FieldBase<T[K]> & FieldDefaults<T[K]>
+}
+
+export type HookOptions<T extends FieldTypeSchema> = {
+  validateOn: 'submit' | 'valueChange'
+  fieldTypeValidation?: {
+    [K in T[keyof T]]: FieldValidator<K>[]
+  }
 }

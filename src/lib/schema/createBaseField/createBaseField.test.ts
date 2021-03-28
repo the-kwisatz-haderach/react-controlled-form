@@ -7,7 +7,7 @@ describe('createBaseField', () => {
       expect(createBaseField({ name: 'test', type: fieldType })).toEqual({
         name: 'test',
         type: fieldType,
-        error: '',
+        errors: [],
         disabled: false,
         required: false,
         validators: []

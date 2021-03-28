@@ -6,7 +6,8 @@ const createFieldValidator = <
 >(
   condition: (...args: Parameters<FieldValidator<T, U>>) => boolean,
   message: string
-): FieldValidator<FieldType, U> => (...args) =>
-  condition(...args) ? message : ''
+): FieldValidator<FieldType, U> => (...args) => {
+  if (condition(...args)) return message
+}
 
 export default createFieldValidator

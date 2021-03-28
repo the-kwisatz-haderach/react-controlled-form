@@ -1,5 +1,5 @@
 import { schemaCreator } from 'lib'
-import { FormConstants } from 'lib/schema/types'
+import { FormProps } from 'lib/schema/types'
 import { formConstantsCreator } from '.'
 
 const formSchema = schemaCreator({
@@ -10,35 +10,31 @@ const formSchema = schemaCreator({
 
 describe('formConstantsCreator', () => {
   it('takes the constant values for a given formSchema', () => {
-    const expected: FormConstants<{
+    const expected: FormProps<{
       name: 'text'
       age: 'number'
       isLeet: 'checkbox'
     }> = {
-      fieldKeys: ['name', 'age', 'isLeet'],
-      fieldValidators: null,
-      fieldProps: {
-        name: {
-          pattern: '',
-          placeholder: '',
-          name: 'name',
-          type: 'text',
-          validators: []
-        },
-        age: {
-          name: 'age',
-          type: 'number',
-          step: 1,
-          decimals: 0,
-          placeholder: '',
-          validators: []
-        },
-        isLeet: {
-          name: 'isLeet',
-          type: 'checkbox',
-          indeterminate: false,
-          validators: []
-        }
+      name: {
+        pattern: '',
+        placeholder: '',
+        name: 'name',
+        type: 'text',
+        validators: []
+      },
+      age: {
+        name: 'age',
+        type: 'number',
+        step: 1,
+        decimals: 0,
+        placeholder: '',
+        validators: []
+      },
+      isLeet: {
+        name: 'isLeet',
+        type: 'checkbox',
+        indeterminate: false,
+        validators: []
       }
     }
 
