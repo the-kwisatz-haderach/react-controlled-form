@@ -32,5 +32,5 @@ export interface UseFormProps<T extends FieldTypeSchema>
   state: FormState<T>
   submitForm: SubmitForm
   updateValue: ValueUpdater<T>
-  hasErrors: () => boolean
+  hasErrors: boolean
 }
