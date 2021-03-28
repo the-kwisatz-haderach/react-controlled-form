@@ -4,7 +4,7 @@ export type DynamicField = 'value' | 'error' | 'disabled' | 'required'
 
 export interface FieldBase<T extends FieldType> {
   type: T
-  label: string
+  label?: string
   error: string
   name: string
   disabled: boolean
@@ -17,15 +17,15 @@ export interface CustomField extends FieldBase<'custom'> {
 
 export interface TextField extends FieldBase<'text'> {
   value: string
-  placeholder: string
-  pattern: string
+  placeholder?: string
+  pattern?: string
 }
 
 export interface NumberField extends FieldBase<'number'> {
   value: number
   min?: number
   max?: number
-  placeholder: string
+  placeholder?: string
   decimals: number
   step: number
 }
@@ -69,6 +69,7 @@ export type FieldConstants<T extends FieldType> = Omit<
 
 export type FormConstants<T extends FieldTypeSchema> = {
   fieldKeys: (keyof T)[]
+  fieldValidators: any
   fieldProps: {
     [K in keyof T & string]: FieldConstants<T[K]>
   }
