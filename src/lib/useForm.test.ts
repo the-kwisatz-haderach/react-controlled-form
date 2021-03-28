@@ -54,7 +54,7 @@ describe('useForm', () => {
             ...formSchema,
             name: {
               ...formSchema.name,
-              error: 'some error!'
+              errors: ['some error!']
             }
           },
           submitHandler

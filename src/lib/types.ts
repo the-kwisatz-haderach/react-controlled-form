@@ -2,7 +2,7 @@ import { SyntheticEvent } from 'react'
 import {
   FieldTypeSchema,
   FormField,
-  FormConstants,
+  FormProps,
   FormState
 } from './schema/types'
 
@@ -27,8 +27,8 @@ export type ValueUpdater<T extends FieldTypeSchema> = <
       }
 ) => void
 
-export interface UseFormProps<T extends FieldTypeSchema>
-  extends Omit<FormConstants<T>, 'fieldValidators'> {
+export interface UseFormProps<T extends FieldTypeSchema> {
+  props: FormProps<T>
   state: FormState<T>
   submitForm: SubmitForm
   updateValue: ValueUpdater<T>

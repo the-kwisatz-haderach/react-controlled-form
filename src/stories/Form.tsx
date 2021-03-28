@@ -18,7 +18,7 @@ export type FormProps = {
  * Simple form.
  */
 export const Form: React.FC<FormProps> = ({ formSchema, submitHandler }) => {
-  const { submitForm, updateValue, state, fieldProps } = useForm(
+  const { submitForm, updateValue, state, props } = useForm(
     formSchema,
     submitHandler
   )
@@ -26,21 +26,21 @@ export const Form: React.FC<FormProps> = ({ formSchema, submitHandler }) => {
   return (
     <form onSubmit={submitForm}>
       <input
-        {...fieldProps.name}
+        {...props.name}
         value={state.name.value}
         onChange={(e) => {
           updateValue({ key: 'name', value: e.target.value })
         }}
       />
       <input
-        {...fieldProps.age}
+        {...props.age}
         value={state.age.value}
         onChange={(e) => {
           updateValue({ key: 'age', value: +e.target.value })
         }}
       />
       <input
-        {...fieldProps.isLeet}
+        {...props.isLeet}
         checked={state.isLeet.value}
         onChange={(e) => {
           updateValue({ key: 'isLeet' })

@@ -1,4 +1,4 @@
-import { SyntheticEvent, useCallback, useMemo, useReducer } from 'react'
+import { SyntheticEvent, useMemo, useReducer, useRef } from 'react'
 import {
   preventDefault,
   updateFieldAction,
@@ -13,27 +13,27 @@ import formConstantsCreator from './helpers/formConstantsCreator/formConstantsCr
 import { initFormState } from './helpers/initFormState'
 import { reduceFormValues } from './helpers/reduceFormValues'
 import { createFormReducer } from './reducers'
-import { FieldTypeSchema, FormSchema, schemaCreator } from './schema'
+import {
+  FieldTypeSchema,
+  HookOptions,
+  FormSchema,
+  schemaCreator
+} from './schema'
 import isFieldTypeSchema from './typeGuards/isFieldTypeSchema'
 import { SubmitHandler, UseFormProps } from './types'
 
-/*
-type TEST = {
-
-}
-*/
-
 const useForm = <T extends FieldTypeSchema>(
   schema: FormSchema<T> | T,
-  submitHandler: SubmitHandler<T>
+  submitHandler: SubmitHandler<T>,
+  options?: HookOptions<T>
 ): UseFormProps<T> => {
-  const { formSchema, fieldProps, fieldKeys } = useMemo(() => {
+  const { formSchema, formProps } = useMemo(() => {
     const formSchema = isFieldTypeSchema(schema)
       ? schemaCreator(schema)()
       : schema
-    const formConstants = formConstantsCreator(formSchema)
+    const formProps = formConstantsCreator(formSchema)
     return {
-      ...formConstants,
+      formProps,
       formSchema
     }
   }, [schema])
@@ -60,17 +60,14 @@ const useForm = <T extends FieldTypeSchema>(
     dispatch
   )
 
-  const updateValue = useMemo(
-    () =>
-      createChainDispatcher([updateFieldAction, validateFieldAction], dispatch),
-    []
-  )
+  const updateValue = useRef(
+    createChainDispatcher([updateFieldAction, validateFieldAction], dispatch)
+  ).current
 
   return {
     submitForm,
     updateValue,
-    fieldKeys,
-    fieldProps,
+    props: formProps,
     state,
     get hasErrors() {
       return formHasErrors(state)
