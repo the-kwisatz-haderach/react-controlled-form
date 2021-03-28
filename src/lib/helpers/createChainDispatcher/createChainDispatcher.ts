@@ -1,26 +1,27 @@
 import { Dispatch } from 'react'
 
-type Action<
-  T extends string = string,
-  P extends Record<string, unknown> | void = void
-> = P extends void
-  ? {
-      type: T
-      payload?: P
-    }
-  : {
-      type: T
-      payload: P
-    }
-
-type ActionCreator<A extends Action> = (payload?: A['payload']) => A
-
-const createChainDispatcher = (actionCreators: ActionCreator<any>[]) => (
+export type Action<T> = (args: {
+  payload: T
+  stopExecution: () => void
   dispatch: Dispatch<any>
-): void => {
-  actionCreators.forEach((action) => {
-    dispatch(action())
-  })
+}) => void
+
+const createChainDispatcher = <T = void>(
+  actionSequence: Action<T>[],
+  dispatch: Dispatch<any>
+) => {
+  let shouldExecute = true
+  const stopExecution = () => {
+    shouldExecute = !shouldExecute
+  }
+
+  return (payload: T): void => {
+    shouldExecute = true
+    for (const action of actionSequence) {
+      if (!shouldExecute) break
+      action({ payload, stopExecution, dispatch })
+    }
+  }
 }
 
 export default createChainDispatcher
