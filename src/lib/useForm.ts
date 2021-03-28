@@ -44,24 +44,20 @@ const useForm = <T extends FieldTypeSchema>(
     initFormState
   )
 
-  const submitter: Action<SyntheticEvent<HTMLFormElement>> = useCallback(
-    ({ payload, stopExecution }) => {
-      if (formHasErrors(state)) {
-        return stopExecution()
-      }
-      const formValues = reduceFormValues(state)
-      submitHandler(formValues, payload)
-    },
-    [state, submitHandler]
-  )
+  const submitter: Action<SyntheticEvent<HTMLFormElement>> = ({
+    payload,
+    stopExecution
+  }) => {
+    if (formHasErrors(state)) {
+      return stopExecution()
+    }
+    const formValues = reduceFormValues(state)
+    submitHandler(formValues, payload)
+  }
 
-  const submitForm = useMemo(
-    () =>
-      createChainDispatcher(
-        [preventDefault, validateFormAction, submitter],
-        dispatch
-      ),
-    [submitter]
+  const submitForm = createChainDispatcher(
+    [preventDefault, validateFormAction, submitter],
+    dispatch
   )
 
   const updateValue = useMemo(
