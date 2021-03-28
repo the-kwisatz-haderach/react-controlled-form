@@ -13,7 +13,7 @@ export type SubmitHandler<T extends FieldTypeSchema> = (
 
 export type SubmitForm = (e: SyntheticEvent<HTMLFormElement>) => void
 
-export type ValueUpdater<T extends FieldTypeSchema<any>> = <
+export type ValueUpdater<T extends FieldTypeSchema> = <
   P extends keyof T & string
 >(
   payload: T[P] extends 'checkbox'
@@ -28,9 +28,9 @@ export type ValueUpdater<T extends FieldTypeSchema<any>> = <
 ) => void
 
 export interface UseFormProps<T extends FieldTypeSchema>
-  extends FormConstants<T> {
+  extends Omit<FormConstants<T>, 'fieldValidators'> {
   state: FormState<T>
   submitForm: SubmitForm
   updateValue: ValueUpdater<T>
-  hasErrors: boolean
+  hasErrors: () => boolean
 }
