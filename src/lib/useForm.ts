@@ -3,7 +3,9 @@ import {
   preventDefault,
   updateFieldAction,
   validateFieldAction,
-  validateFormAction
+  validateFormAction,
+  clearFormAction,
+  SubmitAction
 } from './actions/chainableActions'
 import createChainDispatcher, {
   Action
@@ -22,15 +24,42 @@ import {
 import isFieldTypeSchema from './typeGuards/isFieldTypeSchema'
 import { SubmitHandler, UseFormProps } from './types'
 
+const createSubmitSequence = <T extends FieldTypeSchema>(
+  submitHandler: Action<SyntheticEvent<HTMLFormElement>>,
+  options: HookOptions<T>
+): SubmitAction[] => {
+  const actionSequence: SubmitAction[] = [
+    preventDefault,
+    validateFormAction,
+    submitHandler
+  ]
+
+  if (options.clearOnSubmit) actionSequence.push(clearFormAction)
+
+  return actionSequence
+}
+
+const createHookOptions = <T extends FieldTypeSchema>(
+  options: Partial<HookOptions<T>> = {}
+): HookOptions<T> => ({
+  fieldTypeValidation: {},
+  clearOnSubmit: false,
+  validateOn: 'submit',
+  ...options
+})
+
 const useForm = <T extends FieldTypeSchema>(
   schema: FormSchema<T> | T,
   submitHandler: SubmitHandler<T>,
-  options?: HookOptions<T>
+  options?: Partial<HookOptions<T>>
 ): UseFormProps<T> => {
+  const activeOptions = createHookOptions(options)
+
   const { formSchema, formProps } = useMemo(() => {
     const formSchema = isFieldTypeSchema(schema)
       ? schemaCreator(schema)()
       : schema
+
     const formProps = formConstantsCreator(formSchema)
     return {
       formProps,
@@ -39,7 +68,7 @@ const useForm = <T extends FieldTypeSchema>(
   }, [schema])
 
   const [state, dispatch] = useReducer(
-    createFormReducer(formSchema),
+    createFormReducer(formSchema, activeOptions.fieldTypeValidation),
     formSchema,
     initFormState
   )

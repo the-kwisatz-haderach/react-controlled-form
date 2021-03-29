@@ -56,7 +56,7 @@ export type FormField<T extends FieldType> = T extends 'text'
   ? CheckboxField
   : CustomField
 
-export type FieldTypeSchema<T extends Record<string, FieldType> = any> = {
+export type FieldTypeSchema<T extends Record<string, unknown> = any> = {
   [K in keyof T]: FieldType
 }
 
@@ -85,9 +85,39 @@ export type FormSchema<T extends FieldTypeSchema> = {
   [K in keyof T & string]: FieldBase<T[K]> & FieldDefaults<T[K]>
 }
 
+export type InputSchema<T extends Record<string, unknown> = any> = {
+  [K in keyof T]:
+    | FormField<FieldType>['value']
+    | FieldType
+    | (T[K] extends FormField<infer U>
+        ? Pick<FormField<U>, 'type'> & Partial<FormField<U>>
+        : Pick<FormField<FieldType>, 'type'> & Partial<FormField<FieldType>>)
+}
+
+type FormFieldFromValue<
+  T extends FormField<FieldType>['value']
+> = T extends string
+  ? FormField<'text'>
+  : T extends number
+  ? FormField<'number'>
+  : T extends boolean
+  ? FormField<'checkbox'>
+  : FormField<'custom'>
+
+export type OutputSchema<T extends Record<string, unknown>> = {
+  [K in keyof T]: T[K] extends FieldType
+    ? FormField<T[K]>
+    : T[K] extends { type: FieldType }
+    ? FormField<T[K]['type']>
+    : T[K] extends FormField<FieldType>['value']
+    ? FormFieldFromValue<T[K]>
+    : unknown
+}
+
 export type HookOptions<T extends FieldTypeSchema> = {
   validateOn: 'submit' | 'valueChange'
-  fieldTypeValidation?: {
-    [K in T[keyof T]]: FieldValidator<K>[]
+  clearOnSubmit: boolean
+  fieldTypeValidation: {
+    [K in T[keyof T]]?: FieldValidator<K>[]
   }
 }
