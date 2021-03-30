@@ -1,33 +1,27 @@
 import { SyntheticEvent } from 'react'
-import {
-  FieldTypeSchema,
-  FormField,
-  FormProps,
-  FormState
-} from './schema/types'
+import { FormValues } from './helpers/reduceFormValues'
+import { FormProps, FormState, OutputSchema } from './schema/types'
 
-export type SubmitHandler<T extends FieldTypeSchema> = (
-  values: { [P in keyof T]: FormField<T[P]>['value'] },
+export type SubmitHandler<T extends OutputSchema> = (
+  values: FormValues<T>,
   e: React.SyntheticEvent<HTMLFormElement, Event>
 ) => void
 
 export type SubmitForm = (e: SyntheticEvent<HTMLFormElement>) => void
 
-export type ValueUpdater<T extends FieldTypeSchema> = <
-  P extends keyof T & string
->(
-  payload: T[P] extends 'checkbox'
+export type ValueUpdater<T extends OutputSchema> = <P extends keyof T & string>(
+  payload: T[P]['type'] extends 'checkbox'
     ? {
         key: P
-        value?: FormField<T[P]>['value']
+        value?: T[P]['value']
       }
     : {
         key: P
-        value: FormField<T[P]>['value']
+        value: T[P]['value']
       }
 ) => void
 
-export interface UseFormProps<T extends FieldTypeSchema> {
+export interface UseFormProps<T extends OutputSchema> {
   props: FormProps<T>
   state: FormState<T>
   submitForm: SubmitForm

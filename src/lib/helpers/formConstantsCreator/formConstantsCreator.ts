@@ -1,9 +1,8 @@
 import {
   DynamicField,
   FieldProps,
-  FieldTypeSchema,
   FormProps,
-  FormSchema
+  OutputSchema
 } from '../../schema/types'
 
 const excludedProps: DynamicField[] = [
@@ -13,8 +12,8 @@ const excludedProps: DynamicField[] = [
   'required'
 ] // Fix strict typing
 
-const formConstantsCreator = <T extends FieldTypeSchema>(
-  formSchema: FormSchema<T>
+const formConstantsCreator = <T extends OutputSchema>(
+  formSchema: T
 ): FormProps<T> => {
   return Object.keys(formSchema).reduce<FormProps<T>>(
     (acc, curr) => ({
@@ -22,12 +21,12 @@ const formConstantsCreator = <T extends FieldTypeSchema>(
       [curr]: {
         ...Object.keys(formSchema[curr])
           .filter((prop) => !excludedProps.includes(prop as DynamicField))
-          .reduce<FieldProps<T[keyof T]>>(
+          .reduce(
             (acc2, current) => ({
               ...acc2,
-              [current]: (formSchema as any)[curr][current]
+              [current]: formSchema[curr][current]
             }),
-            {} as FieldProps<T[keyof T]>
+            {} as FieldProps<T[keyof T]['type']>
           )
       }
     }),

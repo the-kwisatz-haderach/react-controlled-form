@@ -1,8 +1,8 @@
-import { FieldType, FieldTypeSchema, FieldValidator } from '../types'
+import { FieldType, FieldValidator, OutputSchema } from '../types'
 
 const createFieldValidator = <
   T extends FieldType,
-  U extends FieldTypeSchema = FieldTypeSchema
+  U extends OutputSchema = OutputSchema
 >(
   condition: (...args: Parameters<FieldValidator<T, U>>) => boolean,
   message: string

@@ -1,11 +1,11 @@
 import { act, renderHook } from '@testing-library/react-hooks'
 import { initFormState } from './helpers/initFormState'
-import { schemaCreator } from './schema'
+import { inputSchemaTransformer } from './schema/inputSchemaTransformer'
 import useForm from './useForm'
 
 describe('useForm', () => {
   test('returned values', () => {
-    const formSchema = schemaCreator({ name: 'text' })()
+    const formSchema = inputSchemaTransformer({ name: 'text' })
     const submitHandler = jest.fn()
     const { result } = renderHook(() => useForm(formSchema, submitHandler))
 
@@ -14,7 +14,7 @@ describe('useForm', () => {
     expect(typeof result.current.updateValue).toEqual('function')
   })
   test('updateValue', () => {
-    const formSchema = schemaCreator({ name: 'text' })()
+    const formSchema = inputSchemaTransformer({ name: 'text' })
     const submitHandler = jest.fn()
     const { result } = renderHook(() => useForm(formSchema, submitHandler))
 
@@ -26,7 +26,7 @@ describe('useForm', () => {
   })
   describe('submitForm', () => {
     it('runs the provided submitHandler with the formValues', () => {
-      const formSchema = schemaCreator({ name: 'text' })()
+      const formSchema = inputSchemaTransformer({ name: 'text' })
       const submitHandler = jest.fn()
       const event = { preventDefault: jest.fn() } as any
       const { result } = renderHook(() => useForm(formSchema, submitHandler))
@@ -43,9 +43,7 @@ describe('useForm', () => {
       expect(event.preventDefault).toHaveBeenCalledTimes(1)
     })
     it('doesnt run the submitHandler if there are validation errors', () => {
-      const formSchema = schemaCreator({ name: 'text' })({
-        name: 'hello world'
-      })
+      const formSchema = inputSchemaTransformer({ name: 'hello world' })
       const submitHandler = jest.fn()
       const event = { preventDefault: jest.fn() } as any
       const { result } = renderHook(() =>

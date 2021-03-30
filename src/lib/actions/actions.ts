@@ -1,10 +1,9 @@
-import { FieldTypeSchema, FormSchema } from 'lib/schema/types'
 import { actionCreatorFactory } from './actionCreatorFactory'
 
 export const UPDATE_VALUE = 'UPDATE_VALUE'
 
 export const updateFieldValue = actionCreatorFactory<
-  { key: keyof FormSchema<FieldTypeSchema>; value?: any },
+  { key: string | number; value?: any },
   typeof UPDATE_VALUE
 >(UPDATE_VALUE)
 
@@ -18,7 +17,7 @@ export const clearForm = actionCreatorFactory(CLEAR_FORM)
 export const validateForm = actionCreatorFactory(VALIDATE_FORM)
 export const validateField = actionCreatorFactory<
   {
-    key: keyof FormSchema<FieldTypeSchema>
+    key: string | number
   },
   typeof VALIDATE_FIELD
 >(VALIDATE_FIELD)

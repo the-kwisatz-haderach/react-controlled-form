@@ -1,10 +1,10 @@
-import { FieldTypeSchema, FormState } from 'lib/schema/types'
+import { FormState, OutputSchema } from 'lib/schema/types'
 
-type FormValues<T extends FieldTypeSchema> = {
+export type FormValues<T extends OutputSchema> = {
   [K in keyof FormState<T>]: FormState<T>[keyof T]['value']
 }
 
-const reduceFormValues = <T extends FieldTypeSchema>(
+const reduceFormValues = <T extends OutputSchema>(
   formState: FormState<T>
 ): FormValues<T> =>
   Object.entries(formState).reduce<FormValues<T>>(

@@ -4,17 +4,17 @@ export type DynamicField = 'value' | 'errors' | 'disabled' | 'required'
 
 /* eslint-disable no-use-before-define */
 export type FieldValidator<
-  T extends FieldType,
-  U extends FieldTypeSchema = FieldTypeSchema
+  V extends FieldType,
+  U extends OutputSchema = OutputSchema
 > = (
-  value: FormField<T>['value'],
+  value: FormField<V>['value'],
   options: {
-    initialValue: FormField<T>['value']
+    initialValue: FormField<V>['value']
     formState: FormState<U>
   }
 ) => string | undefined
 
-export interface FieldBase<T extends FieldType> {
+export interface FieldBase<T extends FieldType> extends Record<string, any> {
   type: T
   label?: string
   errors: string[]
@@ -56,10 +56,6 @@ export type FormField<T extends FieldType> = T extends 'text'
   ? CheckboxField
   : CustomField
 
-export type FieldTypeSchema<T extends Record<string, unknown> = any> = {
-  [K in keyof T]: FieldType
-}
-
 export type FieldDefaults<T extends FieldType> = Omit<
   FormField<T>,
   keyof FieldBase<T>
@@ -69,29 +65,26 @@ export type SchemaDefaults = {
   [K in FieldType]: FieldDefaults<K>
 }
 
-export type FormState<T extends FieldTypeSchema> = {
+export type FormState<T extends OutputSchema> = {
   [K in keyof T]: {
-    [U in DynamicField]: FormField<T[K]>[U]
+    [U in DynamicField]: T[K][U]
   }
 }
 
 export type FieldProps<T extends FieldType> = Omit<FormField<T>, DynamicField>
 
-export type FormProps<T extends FieldTypeSchema> = {
-  [K in keyof T & string]: FieldProps<T[K]>
-}
-
-export type FormSchema<T extends FieldTypeSchema> = {
-  [K in keyof T & string]: FieldBase<T[K]> & FieldDefaults<T[K]>
+export type FormProps<T extends OutputSchema> = {
+  [K in keyof T & string]: FieldProps<T[K]['type']>
 }
 
 export type InputSchema<T extends Record<string, unknown> = any> = {
-  [K in keyof T]:
-    | FormField<FieldType>['value']
-    | FieldType
-    | (T[K] extends FormField<infer U>
-        ? Pick<FormField<U>, 'type'> & Partial<FormField<U>>
-        : Pick<FormField<FieldType>, 'type'> & Partial<FormField<FieldType>>)
+  [K in keyof T]: T[K] extends FieldType
+    ? FieldType
+    : T[K] extends FormField<infer U>
+    ? Pick<FormField<U>, 'type'> & Partial<FormField<U>>
+    : T[K] extends FormField<FieldType>['value']
+    ? FormField<FieldType>['value']
+    : Pick<FormField<FieldType>, 'type'> & Partial<FormField<FieldType>>
 }
 
 type FormFieldFromValue<
@@ -104,20 +97,20 @@ type FormFieldFromValue<
   ? FormField<'checkbox'>
   : FormField<'custom'>
 
-export type OutputSchema<T extends Record<string, unknown>> = {
+export type OutputSchema<T extends InputSchema = any> = {
   [K in keyof T]: T[K] extends FieldType
     ? FormField<T[K]>
     : T[K] extends { type: FieldType }
     ? FormField<T[K]['type']>
     : T[K] extends FormField<FieldType>['value']
     ? FormFieldFromValue<T[K]>
-    : unknown
+    : FormFieldFromValue<FieldType>
 }
 
-export type HookOptions<T extends FieldTypeSchema> = {
+export type HookOptions<T extends OutputSchema> = {
   validateOn: 'submit' | 'valueChange'
   clearOnSubmit: boolean
   fieldTypeValidation: {
-    [K in T[keyof T]]?: FieldValidator<K>[]
+    [K in keyof T]?: T[K]['validators'][]
   }
 }

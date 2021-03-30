@@ -1,8 +1,6 @@
-import { FieldTypeSchema, FormSchema, FormState } from '../../schema/types'
+import { OutputSchema, FormState } from '../../schema/types'
 
-const initFormState = <T extends FieldTypeSchema>(
-  formSchema: FormSchema<T>
-): FormState<T> => {
+const initFormState = <T extends OutputSchema>(formSchema: T): FormState<T> => {
   const fields = Object.keys(formSchema)
   return {
     ...fields.reduce((acc, curr) => {

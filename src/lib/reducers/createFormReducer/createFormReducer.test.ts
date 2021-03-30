@@ -1,6 +1,7 @@
 import { initFormState } from 'lib/helpers/initFormState'
-import { schemaCreator } from 'lib/schema'
 import { createFieldValidator } from 'lib/schema/createFieldValidator'
+import { inputSchemaTransformer } from 'lib/schema/inputSchemaTransformer'
+import { InputSchema } from 'lib/schema/types'
 import { createFormReducer } from '.'
 import {
   clearForm,
@@ -10,14 +11,14 @@ import {
   validateForm
 } from '../../actions/actions'
 
-const simpleSchemaCreator = schemaCreator({
-  name: 'text',
-  age: 'number',
-  isAlive: 'checkbox'
-})
-
-const setup = (...values: Parameters<typeof simpleSchemaCreator>) => {
-  const formSchema = simpleSchemaCreator(...values)
+const setup = (
+  values: InputSchema = {
+    name: 'text',
+    age: 'number',
+    isAlive: 'checkbox'
+  }
+) => {
+  const formSchema = inputSchemaTransformer(values)
   const initialState = initFormState(formSchema)
   const formReducer = createFormReducer(formSchema)
   return { formReducer, initialState }
@@ -94,6 +95,7 @@ describe('formReducer', () => {
   test('validateField', () => {
     const { formReducer, initialState } = setup({
       name: {
+        type: 'text',
         validators: [
           createFieldValidator<'text'>(
             (value) => value === '',
@@ -124,6 +126,7 @@ describe('formReducer', () => {
   test('validateForm', () => {
     const { formReducer, initialState } = setup({
       name: {
+        type: 'text',
         value: '',
         validators: [
           createFieldValidator<'text'>(
@@ -133,6 +136,7 @@ describe('formReducer', () => {
         ]
       },
       age: {
+        type: 'number',
         value: 0,
         validators: [
           createFieldValidator<'number'>(
@@ -146,6 +150,7 @@ describe('formReducer', () => {
         ]
       },
       isAlive: {
+        type: 'checkbox',
         value: false,
         validators: [
           createFieldValidator<'checkbox'>(

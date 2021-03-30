@@ -1,20 +1,16 @@
 import { schemaCreator } from 'lib/schema'
+import { inputSchemaTransformer } from 'lib/schema/inputSchemaTransformer'
 import { FormState } from 'lib/schema/types'
 import initFormState from './initFormState'
 
-type SimpleFieldTypeSchema = {
-  name: 'text'
-  age: 'number'
-}
-
 describe('initFormState', () => {
   it('creates a formState from a default formSchema', () => {
-    const formSchema = schemaCreator({
+    const formSchema = inputSchemaTransformer({
       name: 'text',
       age: 'number'
-    })()
+    })
 
-    const expected: FormState<SimpleFieldTypeSchema> = {
+    const expected: FormState<typeof formSchema> = {
       name: {
         value: '',
         required: false,
@@ -40,7 +36,7 @@ describe('initFormState', () => {
       age: 22
     })
 
-    const expected: FormState<SimpleFieldTypeSchema> = {
+    const expected: FormState<typeof formSchema> = {
       name: {
         value: 'hello',
         required: false,

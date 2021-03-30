@@ -27,10 +27,7 @@ describe('createFieldValidator', () => {
     ).toEqual('Value cant be empty!')
   })
   it('can take initialValue into account when validating a field', () => {
-    const textValidator = createFieldValidator<
-      'text',
-      { name: 'text'; age: 'number' }
-    >(
+    const textValidator = createFieldValidator(
       (value, { initialValue }) => value === initialValue,
       'Value cant be same as initial value!'
     )
@@ -49,10 +46,7 @@ describe('createFieldValidator', () => {
     ).toEqual('Value cant be same as initial value!')
   })
   it('can take the rest of the formState into account when validating a field', () => {
-    const textValidator = createFieldValidator<
-      'text',
-      { name: 'text'; age: 'number' }
-    >(
+    const textValidator = createFieldValidator<'text'>(
       (value, { formState }) =>
         value === 'sauron' && formState.age.value < 54960,
       'Sauron is at least 54,960 years old!'

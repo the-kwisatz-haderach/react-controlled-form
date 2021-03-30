@@ -1,20 +1,16 @@
-import { schemaCreator } from 'lib'
+import { inputSchemaTransformer } from 'lib/schema/inputSchemaTransformer'
 import { FormProps } from 'lib/schema/types'
 import { formConstantsCreator } from '.'
 
-const formSchema = schemaCreator({
+const formSchema = inputSchemaTransformer({
   name: 'text',
   age: 'number',
   isLeet: 'checkbox'
-})()
+})
 
 describe('formConstantsCreator', () => {
   it('takes the constant values for a given formSchema', () => {
-    const expected: FormProps<{
-      name: 'text'
-      age: 'number'
-      isLeet: 'checkbox'
-    }> = {
+    const expected: FormProps<typeof formSchema> = {
       name: {
         pattern: '',
         placeholder: '',

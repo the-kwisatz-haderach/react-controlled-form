@@ -2,11 +2,10 @@ import type { Reducer } from 'react'
 import { initFormState } from 'lib/helpers/initFormState'
 import defaultFieldValues from 'lib/schema/defaultFieldValues'
 import type {
-  FieldTypeSchema,
   FieldValidator,
-  FormSchema,
   FormState,
-  HookOptions
+  HookOptions,
+  OutputSchema
 } from '../../schema/types'
 import {
   UPDATE_VALUE,
@@ -17,17 +16,17 @@ import {
   FormActions
 } from '../../actions/actions'
 
-export type FormReducer<T extends FieldTypeSchema> = Reducer<
+export type FormReducer<T extends OutputSchema> = Reducer<
   FormState<T>,
   FormActions
 >
 
-type ValidatorMap<T extends FieldTypeSchema> = {
-  [K in keyof T]: FieldValidator<T[K], T>[]
+type ValidatorMap<T extends OutputSchema> = {
+  [K in keyof T]: FieldValidator<T[K]['type'], T>[]
 }
 
-const createFormReducer = <T extends FieldTypeSchema>(
-  formSchema: FormSchema<T>,
+const createFormReducer = <T extends OutputSchema>(
+  formSchema: T,
   globalValidators: Partial<HookOptions<T>['fieldTypeValidation']> = {}
 ): FormReducer<T> => {
   const validatorMap: ValidatorMap<T> = Object.keys(formSchema).reduce<
@@ -61,7 +60,7 @@ const createFormReducer = <T extends FieldTypeSchema>(
             ...acc,
             [key]: {
               ...values,
-              value: defaultFieldValues[formSchema[key].type].value,
+              value: (defaultFieldValues[formSchema[key].type] as any).value,
               errors: []
             }
           }),

@@ -1,7 +1,6 @@
-import { FieldTypeSchema } from 'lib/schema'
-import { FormState } from 'lib/schema/types'
+import { FormState, OutputSchema } from 'lib/schema/types'
 
-const formHasErrors = <T extends FieldTypeSchema>(
+const formHasErrors = <T extends OutputSchema>(
   formState: FormState<T>
 ): boolean =>
   Object.values(formState).some(

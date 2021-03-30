@@ -23,8 +23,9 @@ import {
 } from './schema'
 import isFieldTypeSchema from './typeGuards/isFieldTypeSchema'
 import { SubmitHandler, UseFormProps } from './types'
+import { InputSchema, OutputSchema } from './schema/types'
 
-const createSubmitSequence = <T extends FieldTypeSchema>(
+const createSubmitSequence = <T extends OutputSchema>(
   submitHandler: Action<SyntheticEvent<HTMLFormElement>>,
   options: HookOptions<T>
 ): SubmitAction[] => {
@@ -39,7 +40,7 @@ const createSubmitSequence = <T extends FieldTypeSchema>(
   return actionSequence
 }
 
-const createHookOptions = <T extends FieldTypeSchema>(
+const createHookOptions = <T extends OutputSchema>(
   options: Partial<HookOptions<T>> = {}
 ): HookOptions<T> => ({
   fieldTypeValidation: {},
@@ -48,11 +49,11 @@ const createHookOptions = <T extends FieldTypeSchema>(
   ...options
 })
 
-const useForm = <T extends FieldTypeSchema>(
-  schema: FormSchema<T> | T,
-  submitHandler: SubmitHandler<T>,
-  options?: Partial<HookOptions<T>>
-): UseFormProps<T> => {
+const useForm = <T extends InputSchema>(
+  schema: T,
+  submitHandler: SubmitHandler<OutputSchema<T>>,
+  options?: Partial<HookOptions<OutputSchema<T>>>
+): UseFormProps<OutputSchema<T>> => {
   const activeOptions = createHookOptions(options)
 
   const { formSchema, formProps } = useMemo(() => {

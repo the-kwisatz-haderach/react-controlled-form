@@ -4,11 +4,11 @@ import isFormFieldValue from 'lib/typeGuards/isFormFieldValue'
 import fieldCreator from '../fieldCreator'
 import { InputSchema, OutputSchema } from '../types'
 
-const inputSchemaTransformer = <T extends InputSchema>(
+const inputSchemaTransformer = <T extends InputSchema<T>>(
   inputSchema: T
-): OutputSchema<T> => {
-  return Object.keys(inputSchema).reduce<OutputSchema<T>>((acc, name) => {
-    const value = inputSchema[name]
+): OutputSchema<T> =>
+  Object.keys(inputSchema).reduce((acc, name) => {
+    const value = (inputSchema as any)[name]
     if (isFieldType(value)) {
       return {
         ...acc,
@@ -27,6 +27,5 @@ const inputSchemaTransformer = <T extends InputSchema>(
       [name]: fieldCreator({ name, ...value })
     }
   }, {} as OutputSchema<T>)
-}
 
 export default inputSchemaTransformer
