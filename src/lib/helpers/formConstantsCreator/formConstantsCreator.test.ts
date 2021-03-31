@@ -12,8 +12,6 @@ describe('formConstantsCreator', () => {
   it('takes the constant values for a given formSchema', () => {
     const expected: FormProps<typeof formSchema> = {
       name: {
-        pattern: '',
-        placeholder: '',
         name: 'name',
         type: 'text',
         validators: []
@@ -21,15 +19,11 @@ describe('formConstantsCreator', () => {
       age: {
         name: 'age',
         type: 'number',
-        step: 1,
-        decimals: 0,
-        placeholder: '',
         validators: []
       },
       isLeet: {
         name: 'isLeet',
         type: 'checkbox',
-        indeterminate: false,
         validators: []
       }
     }

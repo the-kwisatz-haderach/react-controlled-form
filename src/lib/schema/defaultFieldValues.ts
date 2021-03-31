@@ -2,19 +2,13 @@ import type { SchemaDefaults } from './types'
 
 const defaultFieldValues: SchemaDefaults = {
   number: {
-    value: 0,
-    placeholder: '',
-    decimals: 0,
-    step: 1
+    value: 0
   },
   text: {
-    value: '',
-    placeholder: '',
-    pattern: ''
+    value: ''
   },
   checkbox: {
-    value: false,
-    indeterminate: false
+    value: false
   },
   custom: {
     value: ''

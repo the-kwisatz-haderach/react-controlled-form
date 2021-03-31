@@ -60,7 +60,7 @@ const createFormReducer = <T extends OutputSchema>(
             ...acc,
             [key]: {
               ...values,
-              value: (defaultFieldValues[formSchema[key].type] as any).value,
+              value: defaultFieldValues[formSchema[key].type].value,
               errors: []
             }
           }),

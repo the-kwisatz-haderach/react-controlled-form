@@ -8,10 +8,7 @@ const properties: (keyof TextField)[] = [
   'name',
   'required',
   'type',
-  'validators',
-  'pattern',
-  'placeholder',
-  'pattern'
+  'validators'
 ]
 
 const isFormField = (arg: unknown): arg is FormField<FieldType> => {

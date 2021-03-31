@@ -14,7 +14,7 @@ export type FieldValidator<
   }
 ) => string | undefined
 
-export interface FieldBase<T extends FieldType> extends Record<string, any> {
+export interface FieldBase<T extends FieldType> {
   type: T
   label?: string
   errors: string[]
@@ -39,13 +39,13 @@ export interface NumberField extends FieldBase<'number'> {
   min?: number
   max?: number
   placeholder?: string
-  decimals: number
-  step: number
+  decimals?: number
+  step?: number
 }
 
 export interface CheckboxField extends FieldBase<'checkbox'> {
   value: boolean
-  indeterminate: boolean
+  indeterminate?: boolean
 }
 
 export type FormField<T extends FieldType> = T extends 'text'
