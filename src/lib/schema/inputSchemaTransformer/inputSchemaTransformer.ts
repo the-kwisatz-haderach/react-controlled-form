@@ -1,8 +1,8 @@
-import { getFieldTypeFromValue } from 'lib/helpers/getFieldTypeFromValue'
-import isFieldType from 'lib/typeGuards/isFieldType'
-import isFormFieldValue from 'lib/typeGuards/isFormFieldValue'
+import { getFieldTypeFromValue } from '../..//helpers/getFieldTypeFromValue'
+import isFieldType from '../..//typeGuards/isFieldType'
+import isFormFieldValue from '../../typeGuards/isFormFieldValue'
 import fieldCreator from '../fieldCreator'
-import { InputSchema, OutputSchema } from '../types'
+import type { InputSchema, OutputSchema } from '../types'
 
 const inputSchemaTransformer = <T extends InputSchema<T>>(
   inputSchema: T

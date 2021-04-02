@@ -1,12 +1,8 @@
 import type { Reducer } from 'react'
-import { initFormState } from 'lib/helpers/initFormState'
-import defaultFieldValues from 'lib/schema/defaultFieldValues'
-import type {
-  FieldValidator,
-  FormState,
-  HookOptions,
-  OutputSchema
-} from '../../schema/types'
+import { initFormState } from '../../helpers/initFormState'
+import defaultFieldValues from '../../schema/defaultFieldValues'
+import { createSchemaValidator } from 'lib/schema/createSchemaValidator'
+import type { FormState, HookOptions, OutputSchema } from '../../schema/types'
 import {
   UPDATE_VALUE,
   CLEAR_FORM,
@@ -21,23 +17,12 @@ export type FormReducer<T extends OutputSchema> = Reducer<
   FormActions
 >
 
-type ValidatorMap<T extends OutputSchema> = {
-  [K in keyof T]: FieldValidator<T[K]['type'], T>[]
-}
-
 const createFormReducer = <T extends OutputSchema>(
   formSchema: T,
   globalValidators: Partial<HookOptions<T>['fieldTypeValidation']> = {}
 ): FormReducer<T> => {
-  const validatorMap: ValidatorMap<T> = Object.keys(formSchema).reduce<
-    ValidatorMap<T>
-  >((acc, key) => {
-    const fieldTypeValidation = globalValidators[formSchema[key].type] ?? []
-    return {
-      ...acc,
-      [key]: [...fieldTypeValidation, ...formSchema[key].validators]
-    }
-  }, {} as ValidatorMap<T>)
+  const schemaValidator = createSchemaValidator(formSchema, globalValidators)
+  const initialFormState = initFormState(formSchema)
 
   return (state, action) => {
     switch (action.type) {
@@ -55,11 +40,11 @@ const createFormReducer = <T extends OutputSchema>(
         }
       }
       case CLEAR_FORM: {
-        return Object.entries(state).reduce<FormState<T>>(
-          (acc, [key, values]) => ({
+        return Object.keys(state).reduce<FormState<T>>(
+          (acc, key) => ({
             ...acc,
             [key]: {
-              ...values,
+              ...acc[key],
               value: defaultFieldValues[formSchema[key].type].value,
               errors: []
             }
@@ -68,40 +53,30 @@ const createFormReducer = <T extends OutputSchema>(
         )
       }
       case VALIDATE_FORM: {
-        return Object.keys(state).reduce<FormState<T>>((acc, key) => {
-          return {
+        const fieldValidator = schemaValidator(state)
+        return Object.keys(state).reduce<FormState<T>>(
+          (acc, key) => ({
             ...acc,
             [key]: {
               ...acc[key],
-              errors: validatorMap[key].flatMap((validator) =>
-                validator(state[key].value, {
-                  initialValue: formSchema[key].value,
-                  formState: state
-                })
-              )
+              errors: fieldValidator(key)
             }
-          }
-        }, state)
+          }),
+          state
+        )
       }
       case VALIDATE_FIELD: {
-        const { value } = formSchema[action.payload.key]
-        const validators = validatorMap[action.payload.key]
-        const errors = validators.flatMap((validator) =>
-          validator(state[action.payload.key].value, {
-            initialValue: value,
-            formState: state
-          })
-        )
+        const fieldValidator = schemaValidator(state)
         return {
           ...state,
           [action.payload.key]: {
             ...state[action.payload.key],
-            errors
+            errors: fieldValidator(action.payload.key)
           }
         }
       }
       case RESET_FORM: {
-        return initFormState(formSchema)
+        return initialFormState
       }
       default: {
         return state

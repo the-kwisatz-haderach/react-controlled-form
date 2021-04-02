@@ -1,4 +1,3 @@
-import { schemaCreator } from 'lib/schema'
 import { inputSchemaTransformer } from 'lib/schema/inputSchemaTransformer'
 import { FormState } from 'lib/schema/types'
 import initFormState from './initFormState'
@@ -28,10 +27,7 @@ describe('initFormState', () => {
     expect(initFormState(formSchema)).toEqual(expected)
   })
   it('creates a formState from a formSchema with updated values', () => {
-    const formSchema = schemaCreator({
-      name: 'text',
-      age: 'number'
-    })({
+    const formSchema = inputSchemaTransformer({
       name: 'hello',
       age: 22
     })

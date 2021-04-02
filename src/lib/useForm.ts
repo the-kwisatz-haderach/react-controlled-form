@@ -1,4 +1,4 @@
-import { SyntheticEvent, useMemo, useReducer, useRef } from 'react'
+import { SyntheticEvent, useMemo, useReducer } from 'react'
 import {
   preventDefault,
   updateFieldAction,
@@ -8,25 +8,20 @@ import {
   SubmitAction
 } from './actions/chainableActions'
 import createChainDispatcher, {
-  Action
+  ChainableAction
 } from './helpers/createChainDispatcher/createChainDispatcher'
 import { formHasErrors } from './helpers/formHasErrors'
 import formConstantsCreator from './helpers/formConstantsCreator/formConstantsCreator'
 import { initFormState } from './helpers/initFormState'
 import { reduceFormValues } from './helpers/reduceFormValues'
 import { createFormReducer } from './reducers'
-import {
-  FieldTypeSchema,
-  HookOptions,
-  FormSchema,
-  schemaCreator
-} from './schema'
-import isFieldTypeSchema from './typeGuards/isFieldTypeSchema'
+import { HookOptions, inputSchemaTransformer } from './schema'
 import { SubmitHandler, UseFormProps } from './types'
 import { InputSchema, OutputSchema } from './schema/types'
+import { clearForm } from './actions/actions'
 
 const createSubmitSequence = <T extends OutputSchema>(
-  submitHandler: Action<SyntheticEvent<HTMLFormElement>>,
+  submitHandler: ChainableAction<SyntheticEvent<HTMLFormElement>>,
   options: HookOptions<T>
 ): SubmitAction[] => {
   const actionSequence: SubmitAction[] = [
@@ -54,51 +49,52 @@ const useForm = <T extends InputSchema>(
   submitHandler: SubmitHandler<OutputSchema<T>>,
   options?: Partial<HookOptions<OutputSchema<T>>>
 ): UseFormProps<OutputSchema<T>> => {
-  const activeOptions = createHookOptions(options)
-
-  const { formSchema, formProps } = useMemo(() => {
-    const formSchema = isFieldTypeSchema(schema)
-      ? schemaCreator(schema)()
-      : schema
-
+  const { formSchema, formProps, reducer, activeOptions } = useMemo(() => {
+    const activeOptions = createHookOptions(options)
+    const formSchema = inputSchemaTransformer(schema)
     const formProps = formConstantsCreator(formSchema)
+    const reducer = createFormReducer(
+      formSchema,
+      activeOptions.fieldTypeValidation
+    )
     return {
       formProps,
-      formSchema
+      formSchema,
+      reducer,
+      activeOptions
     }
-  }, [schema])
+  }, [schema, options])
 
-  const [state, dispatch] = useReducer(
-    createFormReducer(formSchema, activeOptions.fieldTypeValidation),
-    formSchema,
-    initFormState
+  const [state, dispatch] = useReducer(reducer, formSchema, initFormState)
+
+  const submitSequence = useMemo(
+    () => createChainDispatcher([preventDefault, validateFormAction], dispatch),
+    []
   )
 
-  const submitter: Action<SyntheticEvent<HTMLFormElement>> = ({
-    payload,
-    stopExecution
-  }) => {
+  const updateValue = useMemo(
+    () =>
+      createChainDispatcher([updateFieldAction, validateFieldAction], dispatch),
+    []
+  )
+
+  const submitForm = (e: SyntheticEvent<HTMLFormElement>) => {
+    submitSequence(e)
     if (formHasErrors(state)) {
-      return stopExecution()
+      return
     }
     const formValues = reduceFormValues(state)
-    submitHandler(formValues, payload)
+    submitHandler(formValues, e)
+    if (activeOptions.clearOnSubmit) {
+      dispatch(clearForm())
+    }
   }
 
-  const submitForm = createChainDispatcher(
-    [preventDefault, validateFormAction, submitter],
-    dispatch
-  )
-
-  const updateValue = useRef(
-    createChainDispatcher([updateFieldAction, validateFieldAction], dispatch)
-  ).current
-
   return {
+    state,
     submitForm,
     updateValue,
     props: formProps,
-    state,
     get hasErrors() {
       return formHasErrors(state)
     }

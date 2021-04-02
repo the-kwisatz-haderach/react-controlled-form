@@ -4,7 +4,7 @@ export type DynamicField = 'value' | 'errors' | 'disabled' | 'required'
 
 /* eslint-disable no-use-before-define */
 export type FieldValidator<
-  V extends FieldType,
+  V extends FieldType = FieldType,
   U extends OutputSchema = OutputSchema
 > = (
   value: FormField<V>['value'],
@@ -48,7 +48,7 @@ export interface CheckboxField extends FieldBase<'checkbox'> {
   indeterminate?: boolean
 }
 
-export type FormField<T extends FieldType> = T extends 'text'
+export type FormField<T extends FieldType = FieldType> = T extends 'text'
   ? TextField
   : T extends 'number'
   ? NumberField
