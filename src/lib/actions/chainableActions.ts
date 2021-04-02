@@ -1,5 +1,5 @@
 import { SyntheticEvent } from 'react'
-import { Action } from 'lib/helpers/createChainDispatcher'
+import { ChainableAction } from '../helpers/createChainDispatcher'
 import {
   clearForm,
   updateFieldValue,
@@ -7,8 +7,8 @@ import {
   validateForm
 } from './actions'
 
-export type SubmitAction = Action<SyntheticEvent<HTMLFormElement>>
-export type UpdateAction = Action<{
+export type SubmitAction = ChainableAction<SyntheticEvent<HTMLFormElement>>
+export type UpdateAction = ChainableAction<{
   key: string
   value?: any
 }>
