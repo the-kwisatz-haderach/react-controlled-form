@@ -1,7 +1,7 @@
 import React from 'react'
 import { Story, Meta } from '@storybook/react/types-6-0'
 import { Form, FormProps } from './Form'
-import { simpleSchemaCreator } from './formSchema'
+import { inputSchemaTransformer } from '../lib/schema'
 
 export default {
   title: 'useForm/Fields',
@@ -12,20 +12,30 @@ const Template: Story<FormProps> = (args) => <Form {...args} />
 
 export const Defaults = Template.bind({})
 Defaults.args = {
-  formSchema: simpleSchemaCreator(),
+  formSchema: inputSchemaTransformer({
+    name: 'text',
+    age: 'number',
+    isLeet: 'checkbox'
+  }),
   submitHandler: console.log
 }
 
 export const WithValues = Template.bind({})
 WithValues.args = {
-  formSchema: simpleSchemaCreator({ name: 'hello' }),
+  formSchema: inputSchemaTransformer({
+    name: 'hello',
+    age: 'number',
+    isLeet: 'checkbox'
+  }),
   submitHandler: console.log
 }
 
 export const GlobalOptions = Template.bind({})
 GlobalOptions.args = {
-  formSchema: simpleSchemaCreator({
-    name: { placeholder: 'type something' }
+  formSchema: inputSchemaTransformer({
+    name: { type: 'text', placeholder: 'type something' },
+    age: 'number',
+    isLeet: 'checkbox'
   }),
   submitHandler: console.log
 }

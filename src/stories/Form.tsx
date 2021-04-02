@@ -1,7 +1,7 @@
 import React from 'react'
 import { useForm } from '../lib'
-import { FormSchema } from '../lib/schema'
-import { SubmitHandler } from '../lib/types'
+import type { OutputSchema } from '../lib/schema/types'
+import type { SubmitHandler } from '../lib/types'
 
 type Fields = {
   name: 'text'
@@ -10,8 +10,8 @@ type Fields = {
 }
 
 export type FormProps = {
-  formSchema: FormSchema<Fields>
-  submitHandler: SubmitHandler<Fields>
+  formSchema: OutputSchema<Fields>
+  submitHandler: SubmitHandler<OutputSchema<Fields>>
 }
 
 /**
